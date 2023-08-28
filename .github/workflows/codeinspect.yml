@@ -1,0 +1,23 @@
+on: [push, pull_request]
+
+jobs:
+  inspection:
+    runs-on: ubuntu-latest
+    name: Inspection
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x'
+      - name: Restore
+        run: dotnet restore ./src/YdbSdk.sln
+      - name: Inspect code
+        uses: muno92/resharper_inspectcode@v1
+        with:
+          solutionPath: ./src/YdbSdk.sln
+          include: |
+            **.cs
+            **.cshtml
+          ignoreIssueType: UnusedField.Compiler,UnusedVariable.Compiler,UnusedAutoPropertyAccessor.Global,UnusedAutoPropertyAccessor.Local,UnusedAnonymousMethodSignature,UnusedNullableDirective,UnusedTupleComponentInReturnValue,UnusedLocalFunction.Compiler,UnusedLocalFunctionReturnValue,UnusedMethodReturnValue.Global,UnusedMethodReturnValue.Local,UnusedType.Global,UnusedType.Local,UnusedMemberInSuper.Global,UnusedMemberInSuper.Local,UnusedMember.Global,UnusedMember.Local,UnusedMemberHierarchy.Global,UnusedMemberHierarchy.Local,UnusedLabel,UnusedVariable,UnusedParameter.Global,UnusedParameter.Local,UnusedParameterInPartialMethod,UnusedPositionalParameterCompiler,UnusedTypeParameter,NotAccessedField.Compiler,NotAccessedVariable.Compiler,NotAccessedField.Global,NotAccessedField.Local,NotAccessedPositionalProperty.Global,NotAccessedPositionalProperty.Local,NotAccessedVariable,NotAccessedOutParameterVariable,NotAccessedPrimaryConstructorParameterCompiler
